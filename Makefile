@@ -1,4 +1,7 @@
-NAME = libft.a
+NAME = libprintf.a
+N_PRINTF = printf.a
+N_LIB = libft.a
+N_NEXT_LINE = next_line.a
 GCC = gcc -Wall -Werror -Wextra -c
 OBJS = objs/
 
@@ -151,9 +154,9 @@ define compile
 endef
 
 define to_lib
-	@ar rc $(NAME) $(1)
-	@ranlib $(NAME)
-	@echo "$(GREY)[$(MOVE)Library file$(BLUE) $(notdir $(NAME))$(GREY)] $(GREEN)Created.$(DEF)"
+	@ar rc $1 $2
+	@ranlib $1
+	@echo "$(GREY)[$(MOVE)Library file$(BLUE) $(notdir $1)$(GREY)] $(GREEN)Created.$(DEF)"
 
 endef
 
@@ -165,7 +168,7 @@ all: $(NAME)
 	
 
 $(NAME): $(OBJ_ALL)
-	@$(call to_lib, $(OBJ_ALL))
+	@$(call to_lib, $(NAME), $(OBJ_ALL))
 
 obj_lib: $(LIB_OBJ)
 $(OBJS)%.o: $(D_L_CONV)%.c $(LIB_INC)
@@ -200,22 +203,25 @@ obj_print: $(PRINT_OBJ)
 $(OBJS)%.o: $(D_PRINT)%.c $(PRINT_INC)
 	$(call compile,$<, $@)
 
-print: obj_print $(PRINT_OBJ)
-	@$(call to_lib, $(PRINT_OBJ))
+print: $(N_PRINTF) obj_print
+$(N_PRINTF): $(PRINT_OBJ)
+	@$(call to_lib, $(N_PRINTF), $(PRINT_OBJ))
 
-lib: obj_lib $(LIB_OBJ)
-	@$(call to_lib, $(LIB_OBJ))
+lib: $(N_LIB) obj_lib
+$(N_LIB): $(LIB_OBJ)
+	@$(call to_lib, $(N_LIB), $(LIB_OBJ))
 
-next_line: obj_line 
-	@$(call to_lib, $(N_LINE_OBJ))
+next_line: $(N_NEXT_LINE) obj_line
+$(N_NEXT_LINE): $(N_LINE_OBJ)
+	@$(call to_lib, $(N_NEXT_LINE), $(N_LINE_OBJ))
 
 clean:
 	@rm -rf $(OBJS)
 	@echo "$(GREY)[$(MOVE)Path objects$(BLUE) $(OBJS)$(GREY)] $(RED)Deleted.$(DEF)"
 
 fclean: clean
-	@rm -f $(NAME)
-	@echo "$(GREY)[$(MOVE)Library file$(BLUE) $(notdir $(NAME))$(GREY)] $(RED)Deleted.$(DEF)"
+	@rm -f $(NAME) $(N_PRINTF) $(N_LIB) $(N_NEXT_LINE)
+	@echo "$(GREY)[$(MOVE)Library files$(BLUE) $(NAME) $(N_PRINTF) $(N_LIB) $(N_NEXT_LINE)$(GREY)] $(RED)Deleted.$(DEF)"
 
 re: fclean all
 
