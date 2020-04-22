@@ -3,124 +3,87 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akhossan <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alzaynou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/06 22:03:34 by akhossan          #+#    #+#             */
-/*   Updated: 2020/02/13 23:42:52 by akhossan         ###   ########.fr       */
+/*   Created: 2019/04/14 17:48:07 by alzaynou          #+#    #+#             */
+/*   Updated: 2019/04/22 14:41:27 by alzaynou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-/*
-** Joins s2 to s1 and frees the old s1
-*/
-
-void		strjoinfree(char **s1, char *s2)
+t_node	*find_fd(int fd, t_node *head)
 {
+	t_node *temp;
+
+	temp = head;
+	while (temp && temp->nfd != fd)
+		temp = temp->next;
+	return (temp);
+}
+
+t_node	*make_node(int fd, t_node *head)
+{
+	t_node *temp;
+	t_node *newn;
+
+	temp = head;
+	newn = (t_node *)malloc(sizeof(t_node));
+	newn->str = ft_strnew(0);
+	newn->nfd = fd;
+	newn->next = NULL;
+	if (!head)
+		return (newn);
+	while (temp->next)
+		temp = temp->next;
+	temp->next = newn;
+	return (newn);
+}
+
+int		get_line(char **line, t_node *temp)
+{
+	size_t	chk;
 	char	*tmp;
 
-	if (s1 && *s1 && s2)
+	chk = 0;
+	while (temp->str[chk] != '\n' && temp->str[chk] != '\0')
+		chk++;
+	if (!(temp->str[chk] == '\0' && chk == 0))
 	{
-		tmp = *s1;
-		*s1 = ft_strjoin(*s1, s2);
-		ft_strdel(&tmp);
-	}
-}
-
-/*
-** Duplicates the string src into dst,
-** and frees the old dst
-*/
-
-void		strdupfree(char **dst, char *src)
-{
-	char	*tmp;
-
-	if (dst && *dst && src)
-	{
-		tmp = *dst;
-		*dst = ft_strdup(src);
-		ft_strdel(&tmp);
-	}
-}
-
-/*
-** Joins the line form previous overflow, to first param
-** then update overflow from endl up to the end of overflow
-*/
-
-void		save_line(char **line, char **overflow, char *endl)
-{
-	endl[0] = 0;
-	strjoinfree(line, *overflow);
-	strdupfree(overflow, endl + 1);
-}
-
-/*
-** Reads a line and stores it to line arg
-** if there is overflow from previous reading
-** it's taken into consideration by joining it with line
-*/
-
-int			read_line(int fd, char *buff, char **line, char **overflow)
-{
-	int		flag;
-	char	*endl;
-
-	while ((flag = read(fd, buff, BUFF_SIZE)) > 0 || (flag == 0 && **overflow))
-	{
-		if (!*buff)
-			return (0);
-		strjoinfree(overflow, buff);
-		if ((endl = ft_strchr(*overflow, '\n')))
-		{
-			save_line(line, overflow, endl);
+		*line = ft_strsub(temp->str, 0, chk);
+		chk = temp->str[chk] == '\n' ? chk + 1 : chk;
+		tmp = temp->str;
+		temp->str = ft_strdup(&temp->str[chk]);
+		free(tmp);
+		if (chk > 0)
 			return (1);
-		}
-		else
-		{
-			strjoinfree(line, *overflow);
-			ft_strclr(buff);
-			ft_strclr(*overflow);
-		}
 	}
-	if (!**overflow)
-		ft_strdel(overflow);
-	if (flag == 0 && **line)
-		return (1);
-	return (flag < 0 ? -1 : 0);
+	*line = NULL;
+	return (0);
 }
 
-/*
-** Reads from a file descriptor a hole line
-** we consider a line a series of characters
-** ending with '\n' (line break character)
-** it returns (1) when a line has been read,
-** (0) if EOF (END OF FILE) has been read
-** (-1) if an error occured when reading
-*/
-
-int			get_next_line(int fd, char **line)
+int		get_next_line(const int fd, char **line)
 {
-	static char		*overflow[FD_MAX];
+	static t_node	*head;
 	char			buff[BUFF_SIZE + 1];
-	char			*endl;
-	int				flag;
+	t_node			*temp;
+	int				red;
+	char			*tmp;
 
-	if (fd < 0 || !line || BUFF_SIZE < 1 || fd > FD_MAX)
+	if (fd < 0 || read(fd, buff, 0) < 0 || !line || BUFF_SIZE < 1)
 		return (-1);
-	ALLOC_LINE(*line);
-	if (!overflow[fd])
-		ALLOC_OVERFLOW(overflow[fd]);
-	if (*overflow[fd] && (endl = ft_strchr(overflow[fd], '\n')))
+	if (!head)
+		head = make_node(fd, head);
+	if ((temp = find_fd(fd, head)) == NULL)
+		temp = make_node(fd, head);
+	while ((red = read(fd, buff, BUFF_SIZE)) > 0)
 	{
-		save_line(line, &overflow[fd], endl);
-		return (1);
+		buff[red] = '\0';
+		tmp = temp->str;
+		temp->str = ft_strjoin(temp->str, buff);
+		free(tmp);
+		if (ft_strchr(temp->str, 10))
+			break ;
 	}
-	ft_bzero(buff, BUFF_SIZE + 1);
-	flag = read_line(fd, buff, line, &overflow[fd]);
-	if (flag <= 0)
-		ft_strdel(line);
-	return (flag);
+	return (get_line(line, temp));
 }

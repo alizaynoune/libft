@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_printf.h"
+#include "ft_printf.h"
 
 t_flags			ft_check_flags2(const char *format, va_list ap, t_flags flags)
 {

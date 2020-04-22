@@ -1,23 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_strclr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alzaynou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/03/30 16:38:06 by alzaynou          #+#    #+#             */
-/*   Updated: 2019/12/26 19:19:32 by alzaynou         ###   ########.fr       */
+/*   Created: 2019/04/03 11:05:23 by alzaynou          #+#    #+#             */
+/*   Updated: 2019/12/26 19:15:13 by alzaynou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libft.h"
+#include "libft.h"
 
-size_t		ft_strlen(const char *s)
+void	ft_strclr(char *s)
 {
-	size_t cnt;
+	size_t len;
 
-	cnt = 0;
-	while (s[cnt] != '\0')
-		cnt++;
-	return (cnt);
+	if (s != NULL)
+	{
+		len = ft_strlen(s);
+		ft_memset(s, '\0', len);
+	}
 }

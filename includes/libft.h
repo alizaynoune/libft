@@ -85,9 +85,19 @@ void			ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 t_list			*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 char			*ft_strndup(const char *str, char c);
 int				ft_atoi_all(char *str);
-int				count_words(char *str, char c);
+int				count_words(char *str, char *c);
 void			remove_last_sapce(char *str);
 int				ft_all_digit(char *str);
 int				ft_count_char(char *str, char c);
+long long		ft_atoll(char *str);
+long long		ft_atoll_all(char *str);
+size_t		ft_skip_char(char *str, char *c);
+long		ft_atol(char *str);
+long		ft_atol_all(char *str);
+size_t		ft_strnlen(char *str, char *c);
+int		**start_end_words(char *str, char *c);
+void		ft_free_rev(void **tab, int len);
+char		**ft_split_by_str(char *str, char *c);
+void		ft_free_tab_char(char **tab);
 
 #endif

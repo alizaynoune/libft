@@ -5,37 +5,47 @@ N_NEXT_LINE = next_line.a
 GCC = gcc -Wall -Werror -Wextra -c
 OBJS = objs/
 
-#
-#src dire
-#
+#*
+#*** src dire
+#*
 
-D_L_CONV = ./libft/convert/
-D_L_COUNT = ./libft/count/
-D_L_EDIT = ./libft/edit/
-D_L_IS = ./libft/is/
-D_L_LST = ./libft/lst/
-D_L_MEM = ./libft/mem/
-D_L_PUT = ./libft/put/
-D_L_STR = ./libft/str/
-D_PRINT = ./printf/
+D_L_CONV = libft/convert/
+D_L_COUNT = libft/count/
+D_L_EDIT = libft/edit/
+D_L_IS = libft/is/
+D_L_LST = libft/lst/
+D_L_MEM = libft/mem/
+D_L_PUT = libft/put/
+D_L_STR = libft/str/
+D_L_FREE = libft/free/
+D_PRINT = printf/
 D_N_LINE = gnl/
-D_INC = ./includes/
+D_INC = includes/
 
-#
-#src file
-#
+#*
+#*** src file
+#*
 
 L_CONV = ft_atoi_all.c		\
        ft_atoi.c		\
+       ft_atol.c		\
+       ft_atol_all.c		\
+       ft_atoll.c		\
+       ft_atoll_all.c		\
        ft_itoa.c		\
        ft_tolower.c		\
        ft_toupper.c
 
 L_COUNT = count_words.c		\
-	ft_count_char.c
+	ft_count_char.c		\
+	ft_strnlen.c		\
+	ft_strlen.c		\
+	start_end_words.c
 
 L_EDIT = ft_bzero.c		\
-       remove_last_space.c
+       remove_last_space.c	\
+       ft_strclr.c		\
+       ft_skip_char.c
 
 L_IS = ft_all_digit.c		\
      ft_isalnum.c		\
@@ -71,17 +81,14 @@ L_PUT = ft_putchar.c		\
 
 L_STR = ft_strcat.c		\
       ft_strchr.c		\
-      ft_strclr.c		\
       ft_strcmp.c		\
       ft_strcpy.c		\
-      ft_strdel.c		\
       ft_strdup.c		\
       ft_strequ.c		\
       ft_striter.c		\
       ft_striteri.c		\
       ft_strjoin.c		\
       ft_strlcat.c		\
-      ft_strlen.c		\
       ft_strmap.c		\
       ft_strmapi.c		\
       ft_strncat.c		\
@@ -95,7 +102,12 @@ L_STR = ft_strcat.c		\
       ft_strsplit.c		\
       ft_strstr.c		\
       ft_strsub.c		\
-      ft_strtrim.c
+      ft_strtrim.c		\
+      split_by_str.c
+
+L_FREE = free_rev.c		\
+	 free_tab_char.c	\
+	 ft_strdel.c
 
 PRINTF = check2.c		\
 	check.c			\
@@ -126,43 +138,49 @@ LIB_OBJ := $(addprefix $(OBJS), $(L_CONV:.c=.o))	\
 	$(addprefix $(OBJS), $(L_LST:.c=.o))		\
 	$(addprefix $(OBJS), $(L_MEM:.c=.o))		\
 	$(addprefix $(OBJS), $(L_PUT:.c=.o))		\
-	$(addprefix $(OBJS), $(L_STR:.c=.o))
+	$(addprefix $(OBJS), $(L_STR:.c=.o))		\
+	$(addprefix $(OBJS), $(L_FREE:.c=.o))
 PRINT_OBJ := $(LIB_OBJ) $(addprefix $(OBJS), $(PRINTF:.c=.o))
 N_LINE_OBJ := $(LIB_OBJ) $(addprefix $(OBJS), $(N_LINE:.c=.o))
 OBJ_ALL := $(PRINT_OBJ) $(addprefix $(OBJS), $(N_LINE:.c=.o))
 ALL_SRC = $(OBJ_ALL:.o=.c)
 
 
-#
-# colors
-#
+#*
+#*** colors
+#*
 
 DEF = \e[0m
 RED = \e[1;31m
-MOVE = \e[1;34m
+PURPLE = \e[1;34m
 BLUE = \e[1;96m
 GREEN = \e[1;32m
-GREY = \e[1;90m
+SILVER = \e[1;90m
 
-#
-# functions
-#
+#*
+#*** functions
+#*
 define compile
 	@mkdir -p $(OBJS)
 	@$(GCC) $1 -o $2 -I $(D_INC)
-	@echo "$(GREY)[$(MOVE)Object file$(BLUE) $(notdir $2)$(GREY)] $(GREEN)Created.$(DEF)"
+	@echo "$(SILVER)[$(PURPLE)Object file$(BLUE) $(notdir $2)$(SILVER)] $(GREEN)Created.$(DEF)"
 endef
 
 define to_lib
 	@ar rc $1 $2
 	@ranlib $1
-	@echo "$(GREY)[$(MOVE)Library file$(BLUE) $(notdir $1)$(GREY)] $(GREEN)Created.$(DEF)"
+	@echo "$(GREY)[$(PURPLE)Library file$(BLUE) $(notdir $1)$(GREY)] $(GREEN)Created.$(DEF)"
 
 endef
 
-#
-# rules
-#
+define remove_lib
+	@rm -f $1
+	@echo "$(GREY)[$(PURPLE)Library file$(BLUE)$1$(GREY)] $(RED)Deleted.$(DEF)"
+endef
+
+#*
+#*** rules
+#*
 
 all: $(NAME)
 	
@@ -195,15 +213,18 @@ $(OBJS)%.o: $(D_L_PUT)%.c $(LIB_INC)
 $(OBJS)%.o: $(D_L_STR)%.c $(LIB_INC)
 	$(call compile,$<, $@)
 
+$(OBJS)%.o: $(D_L_FREE)%.c $(LIB_INC)
+	$(call compile, $<, $@)
+
 obj_line: $(N_LINE_OBJ)
 $(OBJS)%.o: $(D_N_LINE)%.c
 	@$(call compile,$<, $@)
 
-obj_print: $(PRINT_OBJ)
+obj_printf: $(PRINT_OBJ)
 $(OBJS)%.o: $(D_PRINT)%.c $(PRINT_INC)
 	$(call compile,$<, $@)
 
-print: $(N_PRINTF) obj_print
+printf: $(N_PRINTF) obj_printf
 $(N_PRINTF): $(PRINT_OBJ)
 	@$(call to_lib, $(N_PRINTF), $(PRINT_OBJ))
 
@@ -217,12 +238,29 @@ $(N_NEXT_LINE): $(N_LINE_OBJ)
 
 clean:
 	@rm -rf $(OBJS)
-	@echo "$(GREY)[$(MOVE)Path objects$(BLUE) $(OBJS)$(GREY)] $(RED)Deleted.$(DEF)"
+	@echo "$(GREY)[$(PURPLE)Path objects$(BLUE) $(OBJS)$(GREY)] $(RED)Deleted.$(DEF)"
 
 fclean: clean
-	@rm -f $(NAME) $(N_PRINTF) $(N_LIB) $(N_NEXT_LINE)
-	@echo "$(GREY)[$(MOVE)Library files$(BLUE) $(NAME) $(N_PRINTF) $(N_LIB) $(N_NEXT_LINE)$(GREY)] $(RED)Deleted.$(DEF)"
+	@$(call remove_lib, $(NAME))
+	@$(call remove_lib, $(N_PRINTF))
+	@$(call remove_lib, $(N_NEXT_LINE))
+	@$(call remove_lib, $(N_LIB))
+
+fclean_printf: clean
+	@$(call remove_lib, $(N_PRINTF))
+
+fclean_next: clean
+	@$(call remove_lib, $(N_NEXT_LINE))
+
+fclean_lib: clean
+	@$(call remove_lib, $(N_LIB))
+
+re_printf: fclean_printf printf
+
+re_next: fclean_next next_line
+
+re_lib: fclean_lib lib
 
 re: fclean all
 
-.PHONY: re clean fclean all next_line lib print
+.PHONY: re clean fclean all next_line lib printf fclean_printf fclean_next fclean_lib re_printf re_next re_lib

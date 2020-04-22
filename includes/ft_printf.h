@@ -12,7 +12,7 @@
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
-# include "./get_next_line.h"
+# include "get_next_line.h"
 # include <stdarg.h>
 
 /*

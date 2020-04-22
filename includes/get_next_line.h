@@ -3,28 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akhossan <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alzaynou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/06 22:04:56 by akhossan          #+#    #+#             */
-/*   Updated: 2020/02/13 22:36:12 by akhossan         ###   ########.fr       */
+/*   Created: 2019/04/11 20:03:07 by alzaynou          #+#    #+#             */
+/*   Updated: 2019/12/12 00:00:52 by alzaynou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-
-# define ALLOC_LINE(line)		if(!(line = ft_strnew(0))) return (-1)
-# define ALLOC_OVERFLOW(over)	if(!(over = ft_strnew(BUFF_SIZE))) return (-1)
-# define BUFF_SIZE	32
-# define FD_MAX	1024
-
-# include <stdlib.h>
 # include "libft.h"
+# include <stdlib.h>
+# include <unistd.h>
+# define BUFF_SIZE 2
 
-int			get_next_line(int fd, char **line);
-void		strjoinfree(char **s1, char *s2);
-void		strdupfree(char **dst, char *src);
-void		save_line(char **line, char **overflow, char *endl);
-int			read_line(int fd, char *buff, char **line, char **overflow);
+int				get_next_line(const int fd, char **line);
+
+typedef struct	s_node
+{
+	char			*str;
+	int				nfd;
+	struct s_node	*next;
+}				t_node;
 
 #endif

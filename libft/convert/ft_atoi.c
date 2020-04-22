@@ -10,29 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libft.h"
+#include "libft.h"
 
 int		ft_atoi(const char *str)
 {
-	size_t	chk;
+	size_t	i;
 	int		sum;
-	int		ng;
+	int		sing;
 
-	chk = 0;
+	i = ft_skip_char((char *)str, "\t ");
 	sum = 0;
-	ng = 1;
-	while ((str[chk] >= 9 && str[chk] <= 13) || str[chk] == 32)
-		chk++;
-	while ((str[chk] >= 48 && str[chk] <= 57) || ((str[chk] == 43 ||
-					str[chk] == 45) && (!((str[chk - 1] >= 48 &&
-								str[chk - 1] <= 57) || (str[chk - 1] == 43
-									|| str[chk - 1] == 45)))))
-	{
-		if (str[chk] == 45)
-			ng = -1;
-		if (str[chk] >= 48 && str[chk] <= 57)
-			sum = sum * 10 + (str[chk] - 48);
-		chk++;
-	}
-	return (sum * ng);
+	sing = str[i] == '-' ? -1 : 1;
+	str[i] == '-' || str[i] == '+' ? i += 1 : 0;
+	while (ft_isdigit(str[i]))
+		sum = sum * 10 + (str[i++] - '0');
+	return (sum * sing);
 }

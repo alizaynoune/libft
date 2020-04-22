@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libft.h"
+#include "libft.h"
 
 int			ft_atoi_all(char *str)
 {
@@ -18,7 +18,7 @@ int			ft_atoi_all(char *str)
 	int		num;
 	int		cnt;
 
-	cnt = 0;
+	cnt = ft_skip_char(str, "\t ");
 	num = 0;
 	if (!str)
 		return (0);
@@ -30,8 +30,7 @@ int			ft_atoi_all(char *str)
 		num = (num * 10) + (str[cnt] - '0');
 		cnt++;
 	}
-	while (str[cnt] && (str[cnt] == ' ' || str[cnt] == '	'))
-		cnt++;
+	cnt += ft_skip_char(&str[cnt], "\t ");
 	num = !str[cnt] ? num * sing : 0;
 	return (num);
 }

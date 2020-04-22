@@ -10,22 +10,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libft.h"
+#include "libft.h"
 
-int			count_words(char *str, char c)
+int			count_words(char *str, char *c)
 {
-	int	cnt;
-	int words;
+	size_t		i;
+	int		words;
+	char		*chr;
 
-	cnt = 0;
+	i = 0;
 	words = 0;
-	if (!str)
-		return (0);
-	while (str[cnt])
+	while (str[i])
 	{
-		if (str[cnt] != c && (str[cnt + 1] == c || !str[cnt + 1]))
+		chr = ft_strchr(c, str[i]);
+		if (!chr && (ft_strchr(c, str[i + 1]) || !str[i + 1]))
 			words++;
-		cnt++;
+		if (chr)
+			i += ft_skip_char(&str[i], c);
+		else
+			i++;
 	}
 	return (words);
 }
