@@ -169,13 +169,13 @@ endef
 define to_lib
 	@ar rc $1 $2
 	@ranlib $1
-	@echo "$(GREY)[$(PURPLE)Library file$(BLUE) $(notdir $1)$(GREY)] $(GREEN)Created.$(DEF)"
+	@echo "$(SILVER)[$(PURPLE)Library file$(BLUE) $(notdir $1)$(SILVER)] $(GREEN)Created.$(DEF)"
 
 endef
 
 define remove_lib
 	@rm -f $1
-	@echo "$(GREY)[$(PURPLE)Library file$(BLUE)$1$(GREY)] $(RED)Deleted.$(DEF)"
+	@echo "$(SILVER)[$(PURPLE)Library file$(BLUE)$1$(SILVER)] $(RED)Deleted.$(DEF)"
 endef
 
 #*
@@ -238,7 +238,7 @@ $(N_NEXT_LINE): $(N_LINE_OBJ)
 
 clean:
 	@rm -rf $(OBJS)
-	@echo "$(GREY)[$(PURPLE)Path objects$(BLUE) $(OBJS)$(GREY)] $(RED)Deleted.$(DEF)"
+	@echo "$(SILVER)[$(PURPLE)Path objects$(BLUE) $(OBJS)$(SILVER)] $(RED)Deleted.$(DEF)"
 
 fclean: clean
 	@$(call remove_lib, $(NAME))
