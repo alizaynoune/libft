@@ -12,18 +12,32 @@
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
+
+/*
+*** includes
+*/
+
 # include "libft.h"
 # include <stdlib.h>
 # include <unistd.h>
+
+/*
+*** macros
+*/
+
 # define BUFF_SIZE 2
 
 int				get_next_line(const int fd, char **line);
 
-typedef struct	s_node
+/*
+*** data sturct
+*/
+
+typedef struct			s_node
 {
 	char			*str;
-	int				nfd;
-	struct s_node	*next;
+	int			nfd;
+	struct s_node		*next;
 }				t_node;
 
 #endif
