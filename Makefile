@@ -1,7 +1,7 @@
-NAME = libprintf.a
-N_PRINTF = printf.a
+NAME = liball.a
+N_PRINTF = libprintf.a
 N_LIB = libft.a
-N_NEXT_LINE = next_line.a
+N_NEXT_LINE = libline.a
 GCC = gcc -Wall -Werror -Wextra -c
 OBJS = objs/
 
