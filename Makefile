@@ -1,7 +1,7 @@
-NAME = liball.a
+NAME = libnext_printf.a
 N_PRINTF = libprintf.a
 N_LIB = libft.a
-N_NEXT_LINE = libline.a
+N_NEXT_LINE = libnext_line.a
 GCC = gcc -Wall -Werror -Wextra -c
 OBJS = objs/
 
@@ -9,19 +9,19 @@ OBJS = objs/
 #*** src dire
 #*
 
-D_L_CONV = libft/convert/
-D_L_COUNT = libft/count/
-D_L_EDIT = libft/edit/
-D_L_IS = libft/is/
-D_L_LST = libft/lst/
-D_L_MEM = libft/mem/
-D_L_PUT = libft/put/
-D_L_SRCH = libft/srch/
-D_L_STR = libft/str/
-D_L_FREE = libft/free/
-D_PRINT = printf/
-D_N_LINE = gnl/
-D_INC = includes/
+D_L_CONV = ./libft/convert/
+D_L_COUNT = ./libft/count/
+D_L_EDIT = ./libft/edit/
+D_L_IS = ./libft/is/
+D_L_LST = ./libft/lst/
+D_L_MEM = ./libft/mem/
+D_L_PUT = ./libft/put/
+D_L_SRCH = ./libft/srch/
+D_L_STR = ./libft/str/
+D_L_FREE = ./libft/free/
+D_PRINT = ./printf/
+D_N_LINE = ./gnl/
+D_INC = ./includes/
 
 #*
 #*** src file
@@ -182,21 +182,24 @@ endef
 
 define remove_lib
 @rm -f $1
-@echo "$(SILVER)[$(PURPLE)Library file$(YELLOW)$1$(SILVER)] $(RED)Deleted.$(DEF)"
+@echo "$(SILVER)[$(PURPLE)library file$(YELLOW)$1$(SILVER)] $(RED)deleted.$(DEF)"
 endef
 
 #*
 #*** rules
 #*
 
-
 all: $(NAME)
 
+printf: $(N_PRINTF)
+
+libft: $(N_LIB)
+
+next_line: $(N_NEXT_LINE)
 
 $(NAME): $(OBJ_ALL)
 	@$(call to_lib, $(NAME), $(OBJ_ALL))
 
-obj_lib: $(LIB_OBJ)
 $(OBJS)%.o: $(D_L_CONV)%.c $(LIB_INC)
 	@$(call compile,$<, $@)
 
@@ -227,26 +230,21 @@ $(OBJS)%.o: $(D_L_FREE)%.c $(LIB_INC)
 $(OBJS)%.o: $(D_L_SRCH)%.c $(LIB_INC)
 	$(call compile, $<, $@)
 
-obj_line: $(N_LINE_OBJ)
 $(OBJS)%.o: $(D_N_LINE)%.c
 	@$(call compile,$<, $@)
 
-obj_printf: $(PRINT_OBJ)
+
 $(OBJS)%.o: $(D_PRINT)%.c $(PRINT_INC)
 	$(call compile,$<, $@)
 
-printf: $(N_PRINTF) obj_printf
 $(N_PRINTF): $(PRINT_OBJ)
 	@$(call to_lib, $(N_PRINTF), $(PRINT_OBJ))
 
-libft: $(N_LIB) obj_lib
 $(N_LIB): $(LIB_OBJ)
 	@$(call to_lib, $(N_LIB), $(LIB_OBJ))
 
-next_line: $(N_NEXT_LINE) obj_line
 $(N_NEXT_LINE): $(N_LINE_OBJ)
 	@$(call to_lib, $(N_NEXT_LINE), $(N_LINE_OBJ))
-
 
 clean:
 	@rm -rf $(OBJS)
