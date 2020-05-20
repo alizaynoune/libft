@@ -37,7 +37,10 @@ L_CONV = ft_atoi_all.c		\
 	 ft_ltoa.c		\
 	 ft_lltoa.c		\
 	 ft_tolower.c		\
-	 ft_toupper.c
+	 ft_toupper.c		\
+	 ft_atoi_base.c		\
+	 ft_power.c		\
+	 ft_itoa_base.c
 
 L_COUNT = count_words.c		\
 	  ft_count_char.c	\

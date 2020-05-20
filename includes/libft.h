@@ -55,7 +55,9 @@ char			*ft_itoa(int n);
 int			ft_atoi(const char *str);
 int			ft_toupper(int c);
 int			ft_tolower(int c);
-
+int			ft_atoi_base(const char *str, int str_base);
+int			ft_power(int nbr, int power);
+char			*ft_itoa_base(int value, int base);
 
 /*
 *** functions count
